@@ -9,17 +9,28 @@
 import UIKit
 
 class ViewController: UIViewController {
+    @IBOutlet var winnerLabel: UILabel!
+    @IBOutlet var roundLabel: UILabel!
+    @IBOutlet var turnLabel: UILabel!
     @IBOutlet var player1Label: UILabel!
     @IBOutlet var player2Label: UILabel!
     @IBOutlet var endOutlet: UIButton!
     @IBOutlet var diceImage: UIImageView!
+    @IBOutlet var rollOutlet: UIButton!
+    var player1Total = 0
+    var player2Total = 0
     var player1RoundScore = 0
     var player2RoundScore = 0
+    var player1turn = true;
+    var rollNum: Int = 0
     @IBAction func endButton(_ sender: Any) {
-        
+        updatePlayer()
+        player1RoundScore = 0
+        player2RoundScore = 0
     }
     @IBAction func rolledButton(_ sender: Any) {
-        var rollNum = randomNum()
+        
+        rollNum = randomNum()
         switch rollNum {
         case 1:
             let dice1Image = UIImage(named: "dice1.png")
@@ -41,21 +52,84 @@ class ViewController: UIViewController {
             diceImage.image = dice6Image;
         default:
             print("you screwed up")
-            
-            
         }
+        if(rollNum == 1)
+        {
+            if(player1turn == true)
+            {
+                player1RoundScore = 0
+                updatePlayer()
+            }
+            else
+            {
+                player2RoundScore = 0
+                updatePlayer()
+            }
+        }
+        else
+        {
+            if(player1turn == true)
+            {
+                player1RoundScore += rollNum
+                roundLabel.text = String (player1RoundScore)
+                
+            }
+            else
+            {
+                player2RoundScore += rollNum
+                roundLabel.text = String (player2RoundScore)
+                
+            }
+            }
+        
+    }
+    
+    func updatePlayer()
+    {
+        roundLabel.text = String (0)
+        if(player1turn == true)
+        {
+            player1Total += player1RoundScore
+            player1Label.text = String (player1Total)
+        }
+        else
+        {
+            player2Total += player2RoundScore
+            player2Label.text = String (player2Total)
+        }
+        if(player1Total >= 100)
+        {
+            winnerLabel.text = "PLAYER 1 WINS!"
+        }
+        else if(player2Total >= 100)
+        {
+            winnerLabel.text = "PLAYER 2 WINS!"
+        }
+        player1turn.toggle()
+        turnLabel.text = player1turn ? "It's Player One's Turn" : "It's Player Two's Turn"
+    }
+    @IBAction func restartButton(_ sender: Any) {
+        player1Total = 0
+        player2Total = 0
+        player1RoundScore = 0
+        player2RoundScore = 0
+        player1turn = true
+        player1Label.text = String (0)
+        player2Label.text = String (0)
+        roundLabel.text = String (0)
     }
     func randomNum() -> Int
     {
         let num = Int.random(in: 1...6)
         return num
     }
-    @IBOutlet var rollOutlet: UIButton!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
+
 
 
 }
