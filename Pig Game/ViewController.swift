@@ -117,6 +117,7 @@ class ViewController: UIViewController {
         player1Label.text = String (0)
         player2Label.text = String (0)
         roundLabel.text = String (0)
+        turnLabel.text = "It's Player One's Turn"
     }
     func randomNum() -> Int
     {
